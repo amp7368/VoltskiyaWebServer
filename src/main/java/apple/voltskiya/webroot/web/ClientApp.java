@@ -1,7 +1,6 @@
-package apple.voltskiya.webroot.app;
+package apple.voltskiya.webroot.web;
 
 import apple.voltskiya.webroot.WebConfig;
-import apple.voltskiya.webroot.WebModule;
 import java.io.File;
 
 public class ClientApp extends WebApp {

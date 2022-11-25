@@ -1,7 +1,7 @@
-package apple.voltskiya.webroot;
+package apple.voltskiya.webroot.web;
 
-import apple.voltskiya.webroot.app.AdminApp;
-import apple.voltskiya.webroot.app.ClientApp;
+import apple.voltskiya.webroot.WebConfig;
+import apple.voltskiya.webroot.session.SessionManager;
 import com.voltskiya.lib.AbstractModule;
 
 public class WebModule extends AbstractModule {
@@ -20,6 +20,7 @@ public class WebModule extends AbstractModule {
 
     @Override
     public void init() {
+        new SessionManager();
         WebConfig.load();
         client = new ClientApp();
         admin = new AdminApp();

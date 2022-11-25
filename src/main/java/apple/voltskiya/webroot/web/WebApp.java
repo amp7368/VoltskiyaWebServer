@@ -1,4 +1,4 @@
-package apple.voltskiya.webroot.app;
+package apple.voltskiya.webroot.web;
 
 import apple.voltskiya.webroot.WebConfig;
 import io.javalin.Javalin;
@@ -21,10 +21,6 @@ public abstract class WebApp {
         return file;
     }
 
-    public Javalin getApp() {
-        return this.app;
-    }
-
     @NotNull
     private String getIndex() {
         return new File(getDirFile(), "index.html").getAbsolutePath();
@@ -41,7 +37,12 @@ public abstract class WebApp {
             WebConfig.commonConfig(config);
             config.staticFiles.add(getDir(), Location.EXTERNAL);
             config.spaRoot.addFile("/", getIndex(), Location.EXTERNAL);
-        }).start(getPort());
+        });
+        configureApp();
+        app.start(getPort());
+    }
+
+    protected void configureApp() {
     }
 
     protected void additionalConfig(JavalinConfig config) {
