@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 public class AuthController extends ApiController {
 
     public AuthController() {
-        super("/");
+        super("");
     }
 
     @Override

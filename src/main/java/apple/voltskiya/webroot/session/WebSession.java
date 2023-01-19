@@ -9,6 +9,11 @@ import java.util.UUID;
 public class WebSession {
 
     public static final WebSession PUBLIC = new WebSession(AppRole.PUBLIC);
+
+    static {
+        PUBLIC.expiration = Instant.MAX;
+    }
+
     private final AppRole role;
     private Instant expiration = Instant.now().plus(Duration.ofHours(1));
     private final UUID uuid = UUID.randomUUID();

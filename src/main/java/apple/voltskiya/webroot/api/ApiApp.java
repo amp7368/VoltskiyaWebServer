@@ -2,6 +2,8 @@ package apple.voltskiya.webroot.api;
 
 import apple.voltskiya.webroot.WebConfig;
 import apple.voltskiya.webroot.api.login.AuthController;
+import apple.voltskiya.webroot.api.ping.PingController;
+import apple.voltskiya.webroot.session.AppRole;
 import apple.voltskiya.webroot.session.SessionManager;
 import io.javalin.Javalin;
 
@@ -15,6 +17,8 @@ public class ApiApp {
             WebConfig.commonConfig(config);
         });
         new AuthController().register(app);
+        app.get("/ping", PingController::root, AppRole.PUBLIC);
+        app.get("/api", PingController::no, AppRole.PUBLIC);
         app.start(getPort());
     }
 
