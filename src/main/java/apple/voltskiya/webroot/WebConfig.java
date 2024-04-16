@@ -1,33 +1,36 @@
 package apple.voltskiya.webroot;
 
-import apple.utilities.database.ajd.AppleAJD;
-import apple.utilities.database.ajd.AppleAJDInst;
-import com.voltskiya.lib.pmc.FileIOServiceNow;
-import io.javalin.config.JavalinConfig;
-import io.javalin.plugin.bundled.CorsPluginConfig;
+import apple.utilities.database.concurrent.ConcurrentAJD;
 import java.io.File;
 
 public class WebConfig {
 
-    private static AppleAJDInst<WebConfig> manager;
-    public int apiPort = 8102;
-    public String masterUsername = "username";
-    public String masterPassword = "password";
+    private static WebConfig instance;
+    public String pepper = "pepper";
+    public String adminUsername = "username";
+    public String adminPassword = "password";
+    public ApiConfig api = new ApiConfig();
 
-    public static void load() {
-        manager = AppleAJD.createInst(WebConfig.class, new File(WebPlugin.get().getDataFolder(), "Config.json"),
-            FileIOServiceNow.taskCreator());
-        manager.loadOrMake();
+    public WebConfig() {
+        instance = this;
     }
 
     public static WebConfig get() {
-        return manager.getInstance();
+        return instance;
     }
 
-    public static void commonConfig(JavalinConfig config) {
-        config.routing.treatMultipleSlashesAsSingleSlash = true;
-        config.routing.ignoreTrailingSlashes = true;
-        config.showJavalinBanner = false;
-        config.plugins.enableCors((cors -> cors.add(CorsPluginConfig::anyHost)));
+    public static ApiConfig getApi() {
+        return get().api;
+    }
+
+    public static void load() {
+        File file = WebPlugin.get().getRootFile("WebConfig.json");
+        ConcurrentAJD.createInst(WebConfig.class, file).loadNow();
+    }
+
+    public boolean isConfigured() {
+        return !pepper.equals("pepper") &&
+            !adminUsername.equals("username") &&
+            !adminPassword.equals("password");
     }
 }

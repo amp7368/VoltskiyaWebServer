@@ -4,7 +4,16 @@ import com.voltskiya.lib.AbstractModule;
 
 public class ApiModule extends AbstractModule {
 
+    private static ApiModule instance;
     private ApiApp api;
+
+    public ApiModule() {
+        instance = this;
+    }
+
+    public static ApiModule get() {
+        return instance;
+    }
 
     @Override
     public void enable() {

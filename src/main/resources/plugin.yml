@@ -1,6 +1,6 @@
-name: VoltskiyaWebRoot
+name: VoltskiyaWebserver
 version: 1.0
 main: apple.voltskiya.webroot.WebPlugin
 api-version: 1.19
 authors: [ appleptr16 ]
-softdepend: [ LoadDependencies, ApplePluginManager ]
+depend: [ LoadDependencies, VoltPluginManager, VoltskiyaUtilities, VoltskiyaMobSystem ]

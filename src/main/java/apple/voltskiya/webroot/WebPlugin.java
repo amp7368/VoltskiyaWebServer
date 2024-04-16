@@ -1,7 +1,6 @@
 package apple.voltskiya.webroot;
 
-import apple.voltskiya.webroot.api.ApiModule;
-import apple.voltskiya.webroot.session.SessionManager;
+import apple.voltskiya.webroot.model.WebDatabaseModule;
 import com.voltskiya.lib.AbstractModule;
 import com.voltskiya.lib.AbstractVoltPlugin;
 import java.util.Collection;
@@ -22,11 +21,10 @@ public class WebPlugin extends AbstractVoltPlugin {
     @Override
     public void onLoadPre() {
         WebConfig.load();
-        new SessionManager();
     }
 
     @Override
     public Collection<AbstractModule> getModules() {
-        return List.of(new ApiModule());
+        return List.of(new WebDatabaseModule());
     }
 }

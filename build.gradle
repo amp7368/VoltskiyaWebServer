@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id 'io.ebean' version '13.17.4'
+    id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
@@ -8,7 +10,24 @@ version versionValue
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(18))
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name 'appleptr16Repo'
+            url 'https://reposilite.appleptr16.com/appleptr16'
+            credentials(PasswordCredentials)
+        }
+    }
+    publications {
+        mavenJava(MavenPublication) {
+            setGroup groupValue
+            setVersion versionValue
+            from components.java
+        }
     }
 }
 
@@ -23,16 +42,59 @@ configurations {
         resolutionStrategy.cacheChangingModulesFor 1, 'seconds'
     }
 }
+
+project.ext.ebean_version = '13.17.4'
 dependencies {
-    compileOnly 'mc.pmc:VoltPluginManager:3.2-SNAPSHOT'
+    // sql
+    annotationProcessor "io.ebean:ebean-querybean:${ebean_version}"
+    annotationProcessor "io.ebean:querybean-generator:${ebean_version}"
+    compileOnly "io.ebean:ebean-querybean:${ebean_version}"
+    compileOnly "io.ebean:ebean-mysql:${ebean_version}"
+    // sql driver
 
-    compileOnly 'io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT'
+    // migration
+    compileOnly "io.ebean:ebean-ddl-generator:${ebean_version}"
+    compileOnly 'io.ebean:ebean-migration:13.7.0'
+    compileOnly "org.glassfish.jaxb:jaxb-runtime:2.3.2"
 
-    implementation 'io.javalin:javalin:5.2.0'
+    //json
+    compileOnly "io.ebean:ebean-jackson-mapper:${ebean_version}"
+    compileOnly "io.ebean:ebean-jackson-jsonnode:${ebean_version}"
+    compileOnly 'com.fasterxml.jackson.core:jackson-annotations:2.14.2'
+    compileOnly 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
 
+    // logging
+    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.19.0'
+    // http
+    implementation 'io.javalin:javalin:6.1.3'
+    // validation
+    implementation 'am.ik.yavi:yavi:0.12.1'
+    // security
+    implementation 'com.password4j:password4j:1.7.0'
+
+    // volt
+    compileOnly 'mc.pmc:voltpluginmanager:3.2-SNAPSHOT'
+    compileOnly 'voltskiya.utilities:VoltskiyaUtilities:2.0-SNAPSHOT'
+
+    // minecraft
+    compileOnly 'io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT'
+}
+processResources {
+    outputs.upToDateWhen { false }
+}
+compileJava {
+    outputs.upToDateWhen { false }
 }
 
 shadowJar {
+    archiveClassifier.set ''
+    manifest {
+        attributes 'Multi-Release': true
+    }
+    mergeServiceFiles()
+    relocate 'io.ebean', 'com.voltskiya.io.ebean'
+    relocate 'io.ebeaninternal', 'com.voltskiya.io.ebean'
+    relocate 'io.ebeanservice', 'com.voltskiya.io.ebean'
     doLast {
         copy {
             from shadowJar.getArchiveFile()
